@@ -37,7 +37,7 @@
   .hero{
     min-height:100vh;position:relative;overflow:hidden;
     display:flex;flex-direction:column;justify-content:center;
-    background:url('assets/06_文化空间门头.jpg') center/cover;
+    background:url('assets/storefront.jpg') center/cover;
     animation:heroReveal 2.4s cubic-bezier(.2,.8,.2,1) both;
   }
   @keyframes heroReveal{
@@ -135,12 +135,13 @@
 
   /* ===== 01 门头 ===== */
   .storefront{
-    width:100%;height:85vh;overflow:hidden;position:relative;
+    width:100%;height:85vh;min-height:520px;overflow:hidden;position:relative;
+    background:url('assets/storefront.jpg') center 40% / cover no-repeat;
+    animation:kenBurnsBg 12s ease-out forwards;
   }
-  .storefront img{
-    width:100%;height:100%;object-fit:cover;object-position:center 40%;
-    will-change:transform;
-    animation:kenBurns 12s ease-out forwards;
+  @keyframes kenBurnsBg{
+    0%{background-size:100% auto;background-position:center 40%}
+    100%{background-size:115% auto;background-position:center 35%}
   }
   @keyframes kenBurns{
     0%{transform:scale(1) translateY(0)}
@@ -348,7 +349,6 @@
     </div>
   </div>
   <div class="storefront reveal">
-    <img src="assets/06_文化空间门头.jpg" alt="门头" data-parallax>
     <div class="tag">HUIZHOU MEMORY · BRONZE SEAL</div>
   </div>
 </section>
@@ -358,7 +358,7 @@
   <div class="wrap">
     <div class="gift-grid">
       <div class="gift-photo reveal-l">
-        <img src="assets/01_礼盒手提袋.jpg" alt="礼盒">
+        <img src="assets/gift.jpg" alt="礼盒">
       </div>
       <div class="gift-copy reveal-r">
         <div class="sec-num" style="margin-bottom:20px">02</div>
@@ -382,11 +382,11 @@
     </div>
     <div class="paper-pair">
       <figure class="reveal-l">
-        <img src="assets/05_名片信纸火漆.jpg" alt="名片">
+        <img src="assets/card.jpg" alt="名片">
         <figcaption>CARD · WAX SEAL</figcaption>
       </figure>
       <figure class="reveal-r float">
-        <img src="assets/07_帆布包周边.jpg" alt="帆布袋">
+        <img src="assets/tote.jpg" alt="帆布袋">
         <figcaption>TOTE · NATURAL LINEN</figcaption>
       </figure>
     </div>
@@ -410,7 +410,7 @@
         <div class="spec" style="margin-top:28px;font-family:var(--sans);font-size:11px;letter-spacing:.3em;color:var(--cinnabar-bright)">CLOTH-BOUND · BOOKMARK</div>
       </div>
       <div class="book-photo">
-        <img src="assets/04_精装书藏书票.jpg" alt="精装书">
+        <img src="assets/book.jpg" alt="精装书">
       </div>
     </div>
   </div>
@@ -428,10 +428,10 @@
     </div>
     <div class="vessel-grid">
       <div class="vessel-1 reveal-l">
-        <figure><span class="ring"></span><img src="assets/02_黄铜镇纸文房.jpg" alt="镇纸"></figure>
+        <figure><span class="ring"></span><img src="assets/seal.jpg" alt="镇纸"></figure>
       </div>
       <div class="vessel-2 reveal-r">
-        <figure><span class="ring"></span><img src="assets/03_茶叶罐包装.jpg" alt="茶罐"></figure>
+        <figure><span class="ring"></span><img src="assets/tea.jpg" alt="茶罐"></figure>
       </div>
     </div>
   </div>
