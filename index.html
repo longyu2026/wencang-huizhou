@@ -25,13 +25,18 @@
   }
   ::selection{background:var(--cinnabar);color:var(--paper)}
 
-  /* 鼠标光晕 */
+  /* 顶部滚动进度线 */
+  .progress{
+    position:fixed;top:0;left:0;height:3px;width:0;
+    background:var(--cinnabar);z-index:200;
+    transition:width .1s;
+  }
+
   .cursor-glow{
     position:fixed;width:500px;height:500px;border-radius:50%;
     background:radial-gradient(circle,rgba(184,50,30,.08) 0%,transparent 70%);
     pointer-events:none;z-index:1;
     transform:translate(-50%,-50%);
-    transition:opacity .3s;
   }
 
   .wrap{max-width:1440px;margin:0 auto;padding:0 60px;position:relative;z-index:2}
@@ -42,7 +47,6 @@
   }
   .eyebrow::before{content:"";width:50px;height:1px;background:var(--cinnabar)}
 
-  /* 右侧圆点导航 */
   .nav-dots{
     position:fixed;right:30px;top:50%;transform:translateY(-50%);
     display:flex;flex-direction:column;gap:18px;z-index:100;
@@ -138,6 +142,11 @@
     font-family:var(--sans);font-size:clamp(80px,12vw,180px);
     font-weight:100;line-height:.8;color:transparent;
     -webkit-text-stroke:1px var(--cinnabar);
+    transition:all .6s;cursor:default;display:inline-block;
+  }
+  .sec-num:hover{
+    color:var(--cinnabar);-webkit-text-stroke:1px var(--cinnabar);
+    transform:scale(1.05);
   }
   .sec-head h2{
     font-size:clamp(48px,6vw,96px);font-weight:900;line-height:1;
@@ -152,7 +161,6 @@
   }
   .sec-head .desc b{color:var(--paper)}
 
-  /* 逐字入场 */
   .char{display:inline-block;opacity:0;transform:translateY(40px);transition:opacity .6s,transform .6s}
   .in .char{opacity:1;transform:translateY(0)}
 
@@ -260,14 +268,37 @@
     padding:6px 12px;
   }
 
-  /* lightbox */
+  /* lightbox 翻页 */
   .lb{
-    position:fixed;inset:0;background:rgba(8,6,4,.96);
+    position:fixed;inset:0;background:rgba(8,6,4,.97);
     display:none;align-items:center;justify-content:center;z-index:999;
-    cursor:zoom-out;padding:60px;
   }
   .lb.on{display:flex}
-  .lb img{max-width:100%;max-height:100%;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+  .lb img{max-width:85%;max-height:88vh;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+  .lb .arrow{
+    position:absolute;top:50%;transform:translateY(-50%);
+    width:60px;height:60px;border-radius:50%;
+    background:rgba(242,234,216,.06);border:1px solid var(--line);
+    color:var(--paper);font-size:24px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .3s;user-select:none;
+  }
+  .lb .arrow:hover{background:var(--cinnabar);border-color:var(--cinnabar)}
+  .lb .prev{left:30px}
+  .lb .next{right:30px}
+  .lb .counter{
+    position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+    font-family:var(--sans);font-size:13px;letter-spacing:.3em;
+    color:var(--paper-dim);
+  }
+  .lb .close{
+    position:absolute;top:30px;right:30px;
+    width:44px;height:44px;border-radius:50%;
+    background:rgba(242,234,216,.06);border:1px solid var(--line);
+    color:var(--paper);font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lb .close:hover{background:var(--cinnabar)}
 
   /* ===== 尾页 ===== */
   .finale{
@@ -311,7 +342,6 @@
     letter-spacing:.3em;color:var(--paper-dim);
   }
 
-  /* 入场 */
   .reveal{opacity:0;transform:translateY(60px);transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
   .reveal.in{opacity:1;transform:translateY(0)}
   .reveal-l{opacity:0;transform:translateX(-60px);transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
@@ -330,11 +360,14 @@
     section.block{padding:80px 0}
     .red-bar .ticker{font-size:28px}
     .cursor-glow{display:none}
+    .lb .prev{left:10px;width:44px;height:44px}
+    .lb .next{right:10px;width:44px;height:44px}
   }
 </style>
 </head>
 <body>
 
+<div class="progress" id="progress"></div>
 <div class="cursor-glow" id="glow"></div>
 
 <nav class="nav-dots" id="navDots">
@@ -348,7 +381,6 @@
   <a href="#end" data-sec="end"></a>
 </nav>
 
-<!-- 封面 -->
 <header class="hero" id="top">
   <div class="wrap">
     <div class="eyebrow">Brand Identity · Applications 2026</div>
@@ -367,7 +399,6 @@
   <div class="ticker">WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 · WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 ·</div>
 </div>
 
-<!-- 01 门头 -->
 <section class="block" id="s1">
   <div class="wrap">
     <div class="sec-head reveal">
@@ -383,7 +414,6 @@
   </div>
 </section>
 
-<!-- 02 礼盒 -->
 <section class="block" id="s2">
   <div class="wrap">
     <div class="gift-grid">
@@ -400,7 +430,6 @@
   </div>
 </section>
 
-<!-- 03 纸品 -->
 <section class="block" id="s3">
   <div class="wrap">
     <div class="sec-head reveal">
@@ -423,7 +452,6 @@
   </div>
 </section>
 
-<!-- 04 书 -->
 <section class="block" id="s4">
   <div class="wrap">
     <div class="sec-head reveal">
@@ -446,7 +474,6 @@
   </div>
 </section>
 
-<!-- 05 器物 -->
 <section class="block" id="s5">
   <div class="wrap">
     <div class="sec-head reveal">
@@ -467,7 +494,6 @@
   </div>
 </section>
 
-<!-- 26页手册 -->
 <section class="manual" id="vi">
   <div class="wrap">
     <div class="sec-head reveal">
@@ -481,9 +507,14 @@
   </div>
 </section>
 
-<div class="lb" id="lb"><img src="" alt=""></div>
+<div class="lb" id="lb">
+  <div class="close" id="lbClose">✕</div>
+  <div class="arrow prev" id="lbPrev">‹</div>
+  <img src="" alt="">
+  <div class="arrow next" id="lbNext">›</div>
+  <div class="counter" id="lbCounter"></div>
+</div>
 
-<!-- 尾页 -->
 <section class="finale" id="end">
   <div class="wrap">
     <div class="ring-wrap reveal">
@@ -496,7 +527,6 @@
 </section>
 
 <script>
-  // 逐字拆分
   document.querySelectorAll('.chars').forEach(el=>{
     const txt=el.textContent;el.textContent='';
     [...txt].forEach((c,i)=>{
@@ -522,10 +552,14 @@
     requestAnimationFrame(loop);
   })();
 
-  // 右侧导航点
+  // 顶部进度线 + 导航点
   const sections=['top','s1','s2','s3','s4','s5','vi','end'];
   const dots=document.querySelectorAll('.nav-dots a');
+  const progress=document.getElementById('progress');
   window.addEventListener('scroll',()=>{
+    const h=document.documentElement;
+    const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+    progress.style.width=pct+'%';
     let cur='top';
     sections.forEach(id=>{
       const el=document.getElementById(id);
@@ -536,10 +570,12 @@
 
   // 26页手册
   const g=document.getElementById('manualGrid');
+  const pages=[];
   let html='';
   for(let i=1;i<=26;i++){
     const n=String(i).padStart(2,'0');
-    html+=`<figure class="pg reveal" data-src="assets/pages/page-${n}.png">
+    pages.push('assets/pages/page-'+n+'.png');
+    html+=`<figure class="pg reveal" data-idx="${i-1}">
       <img src="assets/pages/page-${n}.png" alt="P${n}">
       <span class="pn">P${n}</span>
     </figure>`;
@@ -547,13 +583,31 @@
   g.innerHTML=html;
   g.querySelectorAll('.pg').forEach(el=>io.observe(el));
 
-  // lightbox
-  const lb=document.getElementById('lb'),lbImg=lb.querySelector('img');
+  // lightbox 翻页
+  const lb=document.getElementById('lb');
+  const lbImg=lb.querySelector('img');
+  const lbCounter=document.getElementById('lbCounter');
+  let cur=0;
+  function show(i){
+    cur=Math.max(0,Math.min(25,i));
+    lbImg.src=pages[cur];
+    lbCounter.textContent='P '+(cur+1)+' / 26';
+  }
   g.addEventListener('click',e=>{
     const f=e.target.closest('.pg');if(!f)return;
-    lbImg.src=f.dataset.src;lb.classList.add('on');
+    show(+f.dataset.idx);
+    lb.classList.add('on');
   });
-  lb.addEventListener('click',()=>lb.classList.remove('on'));
+  document.getElementById('lbClose').onclick=()=>lb.classList.remove('on');
+  document.getElementById('lbPrev').onclick=e=>{e.stopPropagation();show(cur-1)};
+  document.getElementById('lbNext').onclick=e=>{e.stopPropagation();show(cur+1)};
+  lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on')});
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('on'))return;
+    if(e.key==='ArrowLeft')show(cur-1);
+    if(e.key==='ArrowRight')show(cur+1);
+    if(e.key==='Escape')lb.classList.remove('on');
+  });
 </script>
 </body>
 </html>
