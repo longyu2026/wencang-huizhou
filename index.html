@@ -205,10 +205,11 @@
     background:var(--cinnabar);
   }
   .book-photo{
-    transform:perspective(1400px) rotateY(14deg);
-    transition:transform 1s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+    transition:transform .3s ease-out;
+    cursor:grab;
   }
-  .book-photo:hover{transform:perspective(1400px) rotateY(0)}
+  .book-photo:active{cursor:grabbing}
   .book-photo img{width:100%;display:block;border-radius:3px;box-shadow:-30px 30px 60px rgba(0,0,0,.7)}
 
   .vessel-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:start}
@@ -225,24 +226,95 @@
   .vessel-2 .ring{right:-40px;bottom:-40px;border-color:var(--paper)}
 
   .manual{padding:120px 0;background:var(--ink-2)}
-  .manual-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:60px;
+  .dock-preview{
+    width:100%;height:60vh;min-height:400px;border-radius:6px;
+    overflow:hidden;position:relative;margin-bottom:40px;
+    background:#1a1512;
   }
-  .manual-grid .pg{
-    position:relative;border-radius:3px;overflow:hidden;
-    background:#f5f1e8;cursor:zoom-in;
-    transition:transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s;
+  .dock-preview img{
+    width:100%;height:100%;object-fit:contain;
+    transition:opacity .3s, transform .5s;
   }
-  .manual-grid .pg:hover{
-    transform:translateY(-10px) rotate(-1deg);
-    box-shadow:0 30px 60px -10px rgba(184,50,30,.4);
+  .dock-preview .pn{
+    position:absolute;left:20px;bottom:20px;
+    background:var(--cinnabar);color:var(--paper);
+    font-family:var(--sans);font-size:12px;letter-spacing:.2em;
+    padding:8px 16px;z-index:2;
   }
-  .manual-grid .pg img{width:100%;display:block}
-  .manual-grid .pg .pn{
+  .dock{
+    display:flex;gap:8px;overflow-x:auto;padding:20px 0;
+    scrollbar-width:thin;scrollbar-color:var(--cinnabar) transparent;
+  }
+  .dock::-webkit-scrollbar{height:6px}
+  .dock::-webkit-scrollbar-track{background:transparent}
+  .dock::-webkit-scrollbar-thumb{background:var(--cinnabar);border-radius:3px}
+  .dock .pg{
+    flex:0 0 auto;height:80px;width:120px;
+    border-radius:3px;overflow:hidden;cursor:pointer;
+    transition:height .3s cubic-bezier(.2,.8,.2,1), transform .3s;
+    position:relative;opacity:.6;
+  }
+  .dock .pg:hover,.dock .pg.active{
+    height:140px;opacity:1;transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(184,50,30,.4);
+  }
+  .dock .pg img{width:100%;height:100%;object-fit:cover}
+  .dock .pg .pn{
     position:absolute;left:0;top:0;
     background:var(--cinnabar);color:var(--paper);
+    font-family:var(--sans);font-size:9px;letter-spacing:.1em;
+    padding:3px 8px;
+  }
+
+  /* 墨晕 */
+  .ink-blot{
+    position:fixed;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(184,50,30,.4) 0%,transparent 70%);
+    pointer-events:none;z-index:50;
+    transform:translate(-50%,-50%) scale(0);
+  }
+  .ink-blot.go{animation:blotOut 1.5s ease-out forwards}
+  @keyframes blotOut{
+    0%{transform:translate(-50%,-50%) scale(0);opacity:1}
+    100%{transform:translate(-50%,-50%) scale(3);opacity:0}
+  }
+
+  /* 滚动速度变红overlay */
+  .speed-veil{
+    position:fixed;inset:0;background:var(--cinnabar);
+    pointer-events:none;z-index:0;opacity:0;
+    transition:opacity .3s;
+  }
+
+  /* 器物标注 */
+  .vessel-label{
+    position:absolute;right:-10px;top:20px;
     font-family:var(--sans);font-size:10px;letter-spacing:.2em;
-    padding:6px 12px;
+    color:var(--cinnabar-bright);opacity:0;transition:opacity .4s;
+    display:flex;align-items:center;gap:8px;
+  }
+  .vessel-label::before{
+    content:"";width:40px;height:1px;background:var(--cinnabar);
+  }
+  .vessel-grid figure:hover .vessel-label{opacity:1}
+
+  /* 金句屏 */
+  .quote{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+    background:var(--ink);
+  }
+  .quote h2{
+    font-size:clamp(40px,7vw,110px);font-weight:900;line-height:1.3;
+    text-align:center;max-width:1000px;
+  }
+  .quote h2 em{
+    font-style:normal;color:var(--cinnabar-bright);
+  }
+  .quote .en{
+    position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+    font-family:var(--sans);font-size:11px;letter-spacing:.4em;
+    color:var(--paper-dim);
   }
 
   .lb{
@@ -358,6 +430,7 @@
 
 <div class="progress" id="progress"></div>
 <div class="cursor-glow" id="glow"></div>
+<div class="speed-veil" id="speedVeil"></div>
 
 <nav class="nav-dots">
   <a href="#top" data-sec="top" class="active"></a>
@@ -385,11 +458,16 @@
   </div>
 </header>
 
+<section class="quote">
+  <h2 class="reveal">徽州不是被记住的，<br>是<em>被藏起来的</em>。</h2>
+  <div class="en">HUIZHOU IS NOT REMEMBERED — IT IS HIDDEN.</div>
+</section>
+
 <div class="red-bar">
   <div class="ticker">WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 · WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 ·</div>
 </div>
 
-<section class="block" id="s1">
+<section class="block" id="s1" style="background:#0a0806">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
@@ -404,7 +482,7 @@
   </div>
 </section>
 
-<section class="block" id="s2">
+<section class="block" id="s2" style="background:#0e0a08">
   <div class="wrap">
     <div class="gift-grid">
       <div class="gift-photo reveal-l">
@@ -420,7 +498,7 @@
   </div>
 </section>
 
-<section class="block" id="s3">
+<section class="block" id="s3" style="background:#120c09">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
@@ -442,7 +520,7 @@
   </div>
 </section>
 
-<section class="block" id="s4">
+<section class="block" id="s4" style="background:#160e0a">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
@@ -464,7 +542,7 @@
   </div>
 </section>
 
-<section class="block" id="s5">
+<section class="block" id="s5" style="background:#1a100b">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
@@ -475,10 +553,10 @@
     </div>
     <div class="vessel-grid">
       <div class="vessel-1 reveal-l">
-        <figure><span class="ring"></span><img src="assets/seal.jpg" alt="镇纸"></figure>
+        <figure><span class="ring"></span><img src="assets/seal.jpg" alt="镇纸"><span class="vessel-label">BRASS · MATTE</span></figure>
       </div>
       <div class="vessel-2 reveal-r">
-        <figure><span class="ring"></span><img src="assets/tea.jpg" alt="茶罐"></figure>
+        <figure><span class="ring"></span><img src="assets/tea.jpg" alt="茶罐"><span class="vessel-label">CINNABAR LACQUER</span></figure>
       </div>
     </div>
   </div>
@@ -493,7 +571,11 @@
       </div>
       <p class="desc">从标志溯源到色彩字体，<b>32 页全册规范</b>。点击放大。</p>
     </div>
-    <div class="manual-grid" id="manualGrid"></div>
+    <div class="dock-preview" id="dockPreview">
+      <img id="dockImg" src="assets/pages/page-01.png" alt="">
+      <span class="pn" id="dockPn">P01</span>
+    </div>
+    <div class="dock" id="manualDock"></div>
   </div>
 </section>
 
@@ -601,7 +683,7 @@
       p.vx*=.9;p.vy*=.9;
       p.vx+=(p.ox-p.x)*.05;p.vy+=(p.oy-p.y)*.05;
       p.x+=p.vx;p.y+=p.vy;
-      ctx.fillStyle='rgba(184,50,30,.8)';
+      ctx.fillStyle='rgba(224,69,42,.9)';
       ctx.beginPath();
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
       ctx.fill();
@@ -629,20 +711,110 @@
     });
   },{threshold:.3}).observe(finale);
 
-  // 32页手册
-  const g=document.getElementById('manualGrid');
+  // 书籍鼠标控制旋转
+  const book=document.querySelector('.book-photo');
+  if(book){
+    book.addEventListener('mousemove',e=>{
+      const r=book.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width; // 0-1
+      const angle=(x-.5)*40; // -20 ~ 20 deg
+      book.style.transform=`perspective(1400px) rotateY(${angle}deg)`;
+    });
+    book.addEventListener('mouseleave',()=>{
+      book.style.transform='perspective(1400px) rotateY(0deg)';
+    });
+  }
+
+  // 墨晕
+  document.addEventListener('mousedown',e=>{
+    if(e.target.closest('.lb')||e.target.closest('input'))return;
+    const b=document.createElement('div');
+    b.className='ink-blot';
+    b.style.left=e.clientX+'px';
+    b.style.top=e.clientY+'px';
+    document.body.appendChild(b);
+    requestAnimationFrame(()=>b.classList.add('go'));
+    setTimeout(()=>b.remove(),1600);
+  });
+
+  // 滚动速度变红
+  const veil=document.getElementById('speedVeil');
+  let lastY=window.scrollY,lastT=Date.now();
+  window.addEventListener('scroll',()=>{
+    const now=Date.now();
+    const dy=Math.abs(window.scrollY-lastY);
+    const dt=now-lastT;
+    const v=dy/dt;
+    if(v>.8){
+      veil.style.opacity=Math.min(.12,(v-.8)*.15);
+    } else {
+      veil.style.opacity=0;
+    }
+    lastY=window.scrollY;lastT=now;
+  },{passive:true});
+
+  // 章节数字滚到变实心
+  const secNums=document.querySelectorAll('.sec-num');
+  const numIO=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.style.color='var(--cinnabar)';
+        e.target.style.webkitTextStroke='1px var(--cinnabar)';
+      }
+    });
+  },{threshold:.5});
+  secNums.forEach(el=>numIO.observe(el));
+
+  // 点击logo炸粒子
+  const giant=document.querySelector('.finale .giant');
+  if(giant){
+    giant.addEventListener('click',()=>{
+      for(let i=0;i<30;i++){
+        const p=document.createElement('div');
+        p.style.cssText=`
+          position:absolute;width:6px;height:6px;border-radius:50%;
+          background:var(--cinnabar-bright);left:50%;top:50%;
+          pointer-events:none;z-index:10;
+        `;
+        giant.parentElement.appendChild(p);
+        const angle=Math.random()*Math.PI*2;
+        const dist=100+Math.random()*150;
+        p.animate([
+          {transform:'translate(-50%,-50%) scale(1)',opacity:1},
+          {transform:`translate(calc(-50% + ${Math.cos(angle)*dist}px),calc(-50% + ${Math.sin(angle)*dist}px)) scale(0)`,opacity:0}
+        ],{duration:800+Math.random()*400,easing:'ease-out'}).onfinish=()=>p.remove();
+      }
+    });
+  }
+
+  // 32页手册 dock
+  const dock=document.getElementById('manualDock');
+  const dockImg=document.getElementById('dockImg');
+  const dockPn=document.getElementById('dockPn');
   const pages=[];
-  let html='';
+  let dh='';
   for(let i=1;i<=32;i++){
     const n=String(i).padStart(2,'0');
     pages.push('assets/pages/page-'+n+'.png');
-    html+=`<figure class="pg reveal" data-idx="${i-1}">
+    dh+=`<figure class="pg" data-idx="${i-1}" data-n="P${n}">
       <img src="assets/pages/page-${n}.png" alt="P${n}">
       <span class="pn">P${n}</span>
     </figure>`;
   }
-  g.innerHTML=html;
-  g.querySelectorAll('.pg').forEach(el=>io.observe(el));
+  dock.innerHTML=dh;
+  const dockItems=dock.querySelectorAll('.pg');
+  function setPreview(i){
+    dockItems.forEach((el,j)=>el.classList.toggle('active',j===i));
+    dockImg.src=pages[i];
+    dockPn.textContent='P '+String(i+1).padStart(2,'0');
+  }
+  dockItems.forEach(el=>{
+    el.addEventListener('mouseenter',()=>setPreview(+el.dataset.idx));
+    el.addEventListener('click',()=>{
+      show(+el.dataset.idx);
+      lb.classList.add('on');
+    });
+  });
 
   // lightbox
   const lb=document.getElementById('lb');
