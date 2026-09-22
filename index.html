@@ -244,6 +244,7 @@
   .dock{
     display:flex;gap:8px;overflow-x:auto;padding:20px 0;
     scrollbar-width:thin;scrollbar-color:var(--cinnabar) transparent;
+    align-items:center;justify-content:center;
   }
   .dock::-webkit-scrollbar{height:6px}
   .dock::-webkit-scrollbar-track{background:transparent}
@@ -283,6 +284,17 @@
     background:var(--cinnabar);color:var(--paper);
     font-family:var(--sans);font-size:10px;letter-spacing:.2em;
     padding:4px 10px;
+  }
+  .expand-btn{
+    display:block;margin:30px auto 0;
+    background:transparent;border:1px solid var(--cinnabar);
+    color:var(--paper);padding:14px 40px;
+    font-family:var(--sans);font-size:12px;letter-spacing:.3em;
+    cursor:pointer;border-radius:3px;
+    transition:all .4s;
+  }
+  .expand-btn:hover{
+    background:var(--cinnabar);color:var(--paper);
   }
 
   /* 墨晕 */
@@ -595,7 +607,8 @@
       <span class="pn" id="dockPn">P01</span>
     </div>
     <div class="dock" id="manualDock"></div>
-    <div class="manual-grid" id="manualGrid"></div>
+    <button class="expand-btn" id="expandBtn">展开全部 32 页 ↓</button>
+    <div class="manual-grid" id="manualGrid" style="display:none"></div>
   </div>
 </section>
 
@@ -791,10 +804,13 @@
   },{threshold:.5});
   secNums.forEach(el=>numIO.observe(el));
 
-  // 点击logo炸粒子
+  // 点击logo炸粒子 → 改成hover触发
   const giant=document.querySelector('.finale .giant');
+  let boomed2=false;
   if(giant){
-    giant.addEventListener('click',()=>{
+    giant.parentElement.addEventListener('mouseenter',()=>{
+      if(boomed2)return;
+      boomed2=true;
       for(let i=0;i<30;i++){
         const p=document.createElement('div');
         p.style.cssText=`
@@ -871,6 +887,19 @@
     const f=e.target.closest('.pg');if(!f)return;
     show(+f.dataset.idx);
     lb.classList.add('on');
+  });
+
+  // 展开全部
+  const expandBtn=document.getElementById('expandBtn');
+  const grid=document.getElementById('manualGrid');
+  expandBtn.addEventListener('click',()=>{
+    if(grid.style.display==='none'){
+      grid.style.display='grid';
+      expandBtn.textContent='收起 ↑';
+    } else {
+      grid.style.display='none';
+      expandBtn.textContent='展开全部 32 页 ↓';
+    }
   });
 
   // lightbox
