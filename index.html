@@ -25,13 +25,10 @@
   }
   ::selection{background:var(--cinnabar);color:var(--paper)}
 
-  /* 顶部滚动进度线 */
   .progress{
     position:fixed;top:0;left:0;height:3px;width:0;
     background:var(--cinnabar);z-index:200;
-    transition:width .1s;
   }
-
   .cursor-glow{
     position:fixed;width:500px;height:500px;border-radius:50%;
     background:radial-gradient(circle,rgba(184,50,30,.08) 0%,transparent 70%);
@@ -53,12 +50,12 @@
   }
   .nav-dots a{
     width:8px;height:8px;border-radius:50%;background:rgba(242,234,216,.2);
-    transition:all .4s;position:relative;
+    transition:all .4s;
   }
   .nav-dots a.active{background:var(--cinnabar);transform:scale(1.4)}
   .nav-dots a:hover{background:var(--cinnabar-bright)}
 
-  /* ===== 开场封面 ===== */
+  /* ===== 封面 ===== */
   .hero{
     min-height:100vh;position:relative;overflow:hidden;
     display:flex;flex-direction:column;justify-content:center;
@@ -73,18 +70,10 @@
     content:"";position:absolute;inset:0;
     background:linear-gradient(90deg,rgba(10,8,6,.95) 0%,rgba(10,8,6,.7) 50%,rgba(10,8,6,.3) 100%);
   }
-  .hero::after{
-    content:"藏";position:absolute;right:-5%;top:50%;
-    transform:translateY(-50%);
-    font-size:42vw;font-weight:900;line-height:1;
-    color:rgba(184,50,30,.13);pointer-events:none;user-select:none;
-    animation:heroGiant 3s cubic-bezier(.2,.8,.2,1) both;
+  #particleCanvas{
+    position:absolute;inset:0;z-index:1;pointer-events:auto;
   }
-  @keyframes heroGiant{
-    0%{opacity:0;transform:translateY(-50%) scale(1.4)}
-    100%{opacity:1;transform:translateY(-50%) scale(1)}
-  }
-  .hero .wrap > *{opacity:0;animation:heroUp 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+  .hero .wrap > *{opacity:0;animation:heroUp 1.2s cubic-bezier(.2,.8,.2,1) forwards;position:relative;z-index:3}
   .hero .wrap .eyebrow{animation-delay:.8s}
   .hero .wrap h1{animation-delay:1.1s}
   .hero .wrap .en{animation-delay:1.4s}
@@ -95,18 +84,17 @@
   }
   .hero .sweep{
     position:absolute;left:0;bottom:0;height:3px;width:0;
-    background:var(--cinnabar);z-index:2;
+    background:var(--cinnabar);z-index:4;
     animation:sweep 2s cubic-bezier(.7,0,.3,1) 2s forwards;
   }
   @keyframes sweep{0%{width:0}100%{width:100%}}
-  .hero .wrap{position:relative;z-index:1}
   .hero .tagline-v{
     position:absolute;right:40px;top:50%;transform:translateY(-50%);
     writing-mode:vertical-rl;font-size:14px;letter-spacing:.6em;
     color:var(--paper-dim);z-index:3;
   }
   .hero .meta{
-    position:absolute;left:60px;bottom:40px;z-index:1;
+    position:absolute;left:60px;bottom:40px;z-index:3;
     display:flex;gap:40px;font-family:var(--sans);
     font-size:10px;letter-spacing:.3em;color:var(--paper-dim);
   }
@@ -121,7 +109,6 @@
   }
   .hero .lede{max-width:520px;font-size:18px;line-height:2;opacity:.85}
 
-  /* ===== 朱砂红滚动条 ===== */
   .red-bar{
     background:var(--cinnabar);color:var(--paper);
     padding:40px 0;overflow:hidden;white-space:nowrap;
@@ -132,7 +119,6 @@
   }
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* ===== section 通用 ===== */
   section.block{padding:120px 0;position:relative;border-top:1px solid var(--line)}
   .sec-head{
     display:flex;justify-content:space-between;align-items:flex-end;
@@ -160,11 +146,9 @@
     max-width:360px;font-size:15px;line-height:1.9;color:var(--paper-dim);
   }
   .sec-head .desc b{color:var(--paper)}
-
   .char{display:inline-block;opacity:0;transform:translateY(40px);transition:opacity .6s,transform .6s}
   .in .char{opacity:1;transform:translateY(0)}
 
-  /* ===== 01 门头 ===== */
   .storefront{
     width:100%;height:85vh;min-height:520px;overflow:hidden;position:relative;
     background:url('assets/storefront.jpg') center 40% / cover no-repeat;
@@ -180,10 +164,7 @@
     font-family:var(--sans);font-size:11px;letter-spacing:.3em;z-index:3;
   }
 
-  /* ===== 02 礼盒 ===== */
-  .gift-grid{
-    display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center;
-  }
+  .gift-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
   .gift-photo{
     transform:perspective(1600px) rotateY(-10deg) rotateX(4deg) rotate(-2deg);
     transition:transform 1s cubic-bezier(.2,.8,.2,1);
@@ -200,7 +181,6 @@
     letter-spacing:.3em;color:var(--cinnabar-bright);
   }
 
-  /* ===== 03 纸品 ===== */
   .paper-pair{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
   .paper-pair figure{position:relative;overflow:hidden;border-radius:3px}
   .paper-pair img{
@@ -215,7 +195,6 @@
     background:var(--cinnabar);padding:8px 16px;
   }
 
-  /* ===== 04 书 ===== */
   .book-stage{
     background:linear-gradient(135deg,#1c1612,#0e0b08);
     padding:80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;
@@ -232,7 +211,6 @@
   .book-photo:hover{transform:perspective(1400px) rotateY(0)}
   .book-photo img{width:100%;display:block;border-radius:3px;box-shadow:-30px 30px 60px rgba(0,0,0,.7)}
 
-  /* ===== 05 器物 ===== */
   .vessel-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:start}
   .vessel-1{grid-column:span 7}
   .vessel-2{grid-column:span 5;margin-top:120px}
@@ -246,7 +224,6 @@
   .vessel-1 .ring{left:-40px;top:-40px}
   .vessel-2 .ring{right:-40px;bottom:-40px;border-color:var(--paper)}
 
-  /* ===== 26页手册 ===== */
   .manual{padding:120px 0;background:var(--ink-2)}
   .manual-grid{
     display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:60px;
@@ -268,7 +245,6 @@
     padding:6px 12px;
   }
 
-  /* lightbox 翻页 */
   .lb{
     position:fixed;inset:0;background:rgba(8,6,4,.97);
     display:none;align-items:center;justify-content:center;z-index:999;
@@ -300,7 +276,6 @@
   }
   .lb .close:hover{background:var(--cinnabar)}
 
-  /* ===== 尾页 ===== */
   .finale{
     padding:180px 0 120px;text-align:center;
     border-top:1px solid var(--line);position:relative;overflow:hidden;
@@ -331,6 +306,20 @@
   @keyframes ringPulse{
     0%{transform:scale(.7);opacity:.8}
     100%{transform:scale(1.4);opacity:0}
+  }
+  /* 触底爆炸环 */
+  .finale .boom{
+    position:absolute;width:340px;height:340px;border-radius:50%;
+    border:2px solid var(--cinnabar);left:50%;top:50%;
+    transform:translate(-50%,-50%) scale(.5);
+    opacity:0;pointer-events:none;
+  }
+  .finale .boom.go{
+    animation:boomOut 1.2s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes boomOut{
+    0%{opacity:.9;transform:translate(-50%,-50%) scale(.5)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(3)}
   }
   .finale h2{font-size:clamp(48px,7vw,96px);font-weight:900;margin-bottom:24px}
   .finale .en{
@@ -370,7 +359,7 @@
 <div class="progress" id="progress"></div>
 <div class="cursor-glow" id="glow"></div>
 
-<nav class="nav-dots" id="navDots">
+<nav class="nav-dots">
   <a href="#top" data-sec="top" class="active"></a>
   <a href="#s1" data-sec="s1"></a>
   <a href="#s2" data-sec="s2"></a>
@@ -382,6 +371,7 @@
 </nav>
 
 <header class="hero" id="top">
+  <canvas id="particleCanvas"></canvas>
   <div class="wrap">
     <div class="eyebrow">Brand Identity · Applications 2026</div>
     <h1>文藏<span class="red">徽州</span></h1>
@@ -516,17 +506,17 @@
 </div>
 
 <section class="finale" id="end">
-  <div class="wrap">
-    <div class="ring-wrap reveal">
-      <img class="giant" src="assets/logo.png" alt="文藏徽州logo">
-    </div>
-    <h2>一印一世界</h2>
-    <div class="en">FROM SEAL TO VESSEL · WEN CANG HUI ZHOU</div>
-    <div class="foot">文藏徽州 · BRAND APPLICATIONS · 2026</div>
+  <div class="boom" id="boom"></div>
+  <div class="ring-wrap reveal">
+    <img class="giant" src="assets/logo.png" alt="文藏徽州logo">
   </div>
+  <h2>一印一世界</h2>
+  <div class="en">FROM SEAL TO VESSEL · WEN CANG HUI ZHOU</div>
+  <div class="foot">文藏徽州 · BRAND APPLICATIONS · 2026</div>
 </section>
 
 <script>
+  // 逐字
   document.querySelectorAll('.chars').forEach(el=>{
     const txt=el.textContent;el.textContent='';
     [...txt].forEach((c,i)=>{
@@ -552,14 +542,13 @@
     requestAnimationFrame(loop);
   })();
 
-  // 顶部进度线 + 导航点
+  // 进度线+导航点
   const sections=['top','s1','s2','s3','s4','s5','vi','end'];
   const dots=document.querySelectorAll('.nav-dots a');
   const progress=document.getElementById('progress');
   window.addEventListener('scroll',()=>{
     const h=document.documentElement;
-    const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
-    progress.style.width=pct+'%';
+    progress.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%';
     let cur='top';
     sections.forEach(id=>{
       const el=document.getElementById(id);
@@ -567,6 +556,78 @@
     });
     dots.forEach(d=>d.classList.toggle('active',d.dataset.sec===cur));
   },{passive:true});
+
+  // 粒子"藏"字
+  const cv=document.getElementById('particleCanvas');
+  const ctx=cv.getContext('2d');
+  let W,H,particles=[],mx=-9999,my=-9999;
+  function size(){
+    const r=cv.parentElement.getBoundingClientRect();
+    W=cv.width=r.width;H=cv.height=r.height;
+  }
+  function buildText(){
+    const off=document.createElement('canvas');
+    off.width=W;off.height=H;
+    const oc=off.getContext('2d');
+    oc.fillStyle='#fff';
+    oc.font='900 '+Math.min(W*.35,H*.7)+'px Songti SC,serif';
+    oc.textAlign='center';oc.textBaseline='middle';
+    oc.fillText('藏',W*.72,H*.5);
+    const d=oc.getImageData(0,0,W,H).data;
+    particles=[];
+    const gap=Math.max(4,Math.floor(W/200));
+    for(let y=0;y<H;y+=gap){
+      for(let x=0;x<W;x+=gap){
+        if(d[(y*W+x)*4]>128){
+          particles.push({
+            x:x,y:y,
+            ox:x,oy:y,
+            vx:0,vy:0,
+            r:Math.random()*1.5+.5
+          });
+        }
+      }
+    }
+  }
+  function drawP(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      const dx=p.x-mx,dy=p.y-my;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        const f=(120-dist)/120*3;
+        p.vx+=dx/dist*f;p.vy+=dy/dist*f;
+      }
+      p.vx*=.9;p.vy*=.9;
+      p.vx+=(p.ox-p.x)*.05;p.vy+=(p.oy-p.y)*.05;
+      p.x+=p.vx;p.y+=p.vy;
+      ctx.fillStyle='rgba(184,50,30,.8)';
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(drawP);
+  }
+  cv.parentElement.addEventListener('mousemove',e=>{
+    const r=cv.getBoundingClientRect();
+    mx=e.clientX-r.left;my=e.clientY-r.top;
+  });
+  cv.parentElement.addEventListener('mouseleave',()=>{mx=-9999;my=-9999});
+  size();buildText();drawP();
+  addEventListener('resize',()=>{size();buildText()});
+
+  // 尾页触底爆炸
+  const finale=document.getElementById('end');
+  const boom=document.getElementById('boom');
+  let boomed=false;
+  new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting && !boomed){
+        boomed=true;
+        boom.classList.add('go');
+      }
+    });
+  },{threshold:.3}).observe(finale);
 
   // 26页手册
   const g=document.getElementById('manualGrid');
@@ -583,7 +644,7 @@
   g.innerHTML=html;
   g.querySelectorAll('.pg').forEach(el=>io.observe(el));
 
-  // lightbox 翻页
+  // lightbox
   const lb=document.getElementById('lb');
   const lbImg=lb.querySelector('img');
   const lbCounter=document.getElementById('lbCounter');
