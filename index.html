@@ -381,7 +381,7 @@
   <div class="tagline-v">一印一世界</div>
   <div class="sweep"></div>
   <div class="meta">
-    <span>07 OBJECTS</span><span>26 PAGES</span><span>HUIZHOU · CHINA</span>
+    <span>07 OBJECTS</span><span>32 PAGES</span><span>HUIZHOU · CHINA</span>
   </div>
 </header>
 
@@ -489,9 +489,9 @@
     <div class="sec-head reveal">
       <div>
         <div class="sec-num" style="color:transparent;-webkit-text-stroke:1px var(--paper)">VI</div>
-        <h2><span class="en">Full Manual · 26 Pages</span><span class="chars">完整规范</span></h2>
+        <h2><span class="en">Full Manual · 32 Pages</span><span class="chars">完整规范</span></h2>
       </div>
-      <p class="desc">从标志溯源到色彩字体，<b>26 页全册规范</b>。点击放大。</p>
+      <p class="desc">从标志溯源到色彩字体，<b>32 页全册规范</b>。点击放大。</p>
     </div>
     <div class="manual-grid" id="manualGrid"></div>
   </div>
@@ -629,11 +629,11 @@
     });
   },{threshold:.3}).observe(finale);
 
-  // 26页手册
+  // 32页手册
   const g=document.getElementById('manualGrid');
   const pages=[];
   let html='';
-  for(let i=1;i<=26;i++){
+  for(let i=1;i<=32;i++){
     const n=String(i).padStart(2,'0');
     pages.push('assets/pages/page-'+n+'.png');
     html+=`<figure class="pg reveal" data-idx="${i-1}">
@@ -650,9 +650,9 @@
   const lbCounter=document.getElementById('lbCounter');
   let cur=0;
   function show(i){
-    cur=Math.max(0,Math.min(25,i));
+    cur=Math.max(0,Math.min(31,i));
     lbImg.src=pages[cur];
-    lbCounter.textContent='P '+(cur+1)+' / 26';
+    lbCounter.textContent='P '+(cur+1)+' / 32';
   }
   g.addEventListener('click',e=>{
     const f=e.target.closest('.pg');if(!f)return;
