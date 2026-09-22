@@ -74,6 +74,10 @@
     background:var(--cinnabar);z-index:2;
     animation:sweep 2s cubic-bezier(.7,0,.3,1) 2s forwards;
   }
+  @keyframes sweep{
+    0%{width:0}
+    100%{width:100%}
+  }
   .hero .wrap{position:relative;z-index:1}
   .hero .tagline-v{
     position:absolute;right:40px;top:50%;transform:translateY(-50%);
@@ -143,10 +147,6 @@
     0%{background-size:100% auto;background-position:center 40%}
     100%{background-size:115% auto;background-position:center 35%}
   }
-  @keyframes kenBurns{
-    0%{transform:scale(1) translateY(0)}
-    100%{transform:scale(1.12) translateY(-2%)}
-  }
   .storefront .tag{
     position:absolute;left:40px;bottom:40px;
     background:var(--cinnabar);padding:16px 28px;
@@ -174,9 +174,12 @@
   }
 
   /* ===== 03 纸品 ===== */
-  .paper-pair{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .paper-pair{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
   .paper-pair figure{position:relative;overflow:hidden;border-radius:3px}
-  .paper-pair img{width:100%;display:block;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+  .paper-pair img{
+    width:100%;display:block;aspect-ratio:4/3;object-fit:cover;
+    transition:transform 1.2s cubic-bezier(.2,.8,.2,1);
+  }
   .paper-pair figure:hover img{transform:scale(1.08)}
   .paper-pair figure:nth-child(2){margin-top:80px}
   .paper-pair figcaption{
@@ -300,9 +303,6 @@
   .reveal-r{opacity:0;transform:translateX(60px);transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
   .reveal-r.in{opacity:1;transform:translateX(0)}
 
-  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-  .float{animation:floatY 6s ease-in-out infinite}
-
   @media(max-width:900px){
     .wrap{padding:0 24px}
     .gift-grid,.paper-pair,.book-stage,.vessel-grid{grid-template-columns:1fr}
@@ -385,7 +385,7 @@
         <img src="assets/card.jpg" alt="名片">
         <figcaption>CARD · WAX SEAL</figcaption>
       </figure>
-      <figure class="reveal-r float">
+      <figure class="reveal-r">
         <img src="assets/tote.jpg" alt="帆布袋">
         <figcaption>TOTE · NATURAL LINEN</figcaption>
       </figure>
@@ -470,16 +470,6 @@
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
   },{threshold:.15});
   document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
-
-  const pf=document.querySelector('[data-parallax]');
-  if(pf){
-    const wrap=pf.parentElement;
-    window.addEventListener('scroll',()=>{
-      const r=wrap.getBoundingClientRect();
-      const p=(r.top-window.innerHeight/2)/window.innerHeight;
-      pf.style.transform=`translateY(${p*60}px)`;
-    },{passive:true});
-  }
 
   const g=document.getElementById('manualGrid');
   let html='';
