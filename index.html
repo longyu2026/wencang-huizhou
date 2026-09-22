@@ -25,13 +25,34 @@
   }
   ::selection{background:var(--cinnabar);color:var(--paper)}
 
-  .wrap{max-width:1440px;margin:0 auto;padding:0 60px}
+  /* 鼠标光晕 */
+  .cursor-glow{
+    position:fixed;width:500px;height:500px;border-radius:50%;
+    background:radial-gradient(circle,rgba(184,50,30,.08) 0%,transparent 70%);
+    pointer-events:none;z-index:1;
+    transform:translate(-50%,-50%);
+    transition:opacity .3s;
+  }
+
+  .wrap{max-width:1440px;margin:0 auto;padding:0 60px;position:relative;z-index:2}
   .eyebrow{
     font-family:var(--sans);font-size:12px;letter-spacing:.4em;
     text-transform:uppercase;color:var(--cinnabar-bright);
     display:flex;align-items:center;gap:16px;
   }
   .eyebrow::before{content:"";width:50px;height:1px;background:var(--cinnabar)}
+
+  /* 右侧圆点导航 */
+  .nav-dots{
+    position:fixed;right:30px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:18px;z-index:100;
+  }
+  .nav-dots a{
+    width:8px;height:8px;border-radius:50%;background:rgba(242,234,216,.2);
+    transition:all .4s;position:relative;
+  }
+  .nav-dots a.active{background:var(--cinnabar);transform:scale(1.4)}
+  .nav-dots a:hover{background:var(--cinnabar-bright)}
 
   /* ===== 开场封面 ===== */
   .hero{
@@ -68,16 +89,12 @@
     0%{opacity:0;transform:translateY(60px)}
     100%{opacity:1;transform:translateY(0)}
   }
-  /* 封面红线扫过 */
   .hero .sweep{
     position:absolute;left:0;bottom:0;height:3px;width:0;
     background:var(--cinnabar);z-index:2;
     animation:sweep 2s cubic-bezier(.7,0,.3,1) 2s forwards;
   }
-  @keyframes sweep{
-    0%{width:0}
-    100%{width:100%}
-  }
+  @keyframes sweep{0%{width:0}100%{width:100%}}
   .hero .wrap{position:relative;z-index:1}
   .hero .tagline-v{
     position:absolute;right:40px;top:50%;transform:translateY(-50%);
@@ -98,9 +115,7 @@
     font-family:var(--sans);font-size:13px;letter-spacing:.5em;
     color:var(--paper-dim);margin-bottom:36px;
   }
-  .hero .lede{
-    max-width:520px;font-size:18px;line-height:2;opacity:.85;
-  }
+  .hero .lede{max-width:520px;font-size:18px;line-height:2;opacity:.85}
 
   /* ===== 朱砂红滚动条 ===== */
   .red-bar{
@@ -136,6 +151,10 @@
     max-width:360px;font-size:15px;line-height:1.9;color:var(--paper-dim);
   }
   .sec-head .desc b{color:var(--paper)}
+
+  /* 逐字入场 */
+  .char{display:inline-block;opacity:0;transform:translateY(40px);transition:opacity .6s,transform .6s}
+  .in .char{opacity:1;transform:translateY(0)}
 
   /* ===== 01 门头 ===== */
   .storefront{
@@ -267,7 +286,6 @@
     60%{opacity:1;transform:scale(.96) rotate(1deg)}
     100%{opacity:1;transform:scale(1) rotate(0)}
   }
-  /* 朱砂环扩散 */
   .finale .ring-wrap{
     width:340px;height:340px;margin:0 auto 40px;position:relative;
     display:flex;align-items:center;justify-content:center;
@@ -283,9 +301,7 @@
     0%{transform:scale(.7);opacity:.8}
     100%{transform:scale(1.4);opacity:0}
   }
-  .finale h2{
-    font-size:clamp(48px,7vw,96px);font-weight:900;margin-bottom:24px;
-  }
+  .finale h2{font-size:clamp(48px,7vw,96px);font-weight:900;margin-bottom:24px}
   .finale .en{
     font-family:var(--sans);font-size:13px;letter-spacing:.4em;
     color:var(--paper-dim);
@@ -310,15 +326,30 @@
     .paper-pair figure:nth-child(2){margin-top:24px}
     .manual-grid{grid-template-columns:repeat(2,1fr)}
     .hero .meta,.hero .tagline-v{display:none}
+    .nav-dots{display:none}
     section.block{padding:80px 0}
     .red-bar .ticker{font-size:28px}
+    .cursor-glow{display:none}
   }
 </style>
 </head>
 <body>
 
+<div class="cursor-glow" id="glow"></div>
+
+<nav class="nav-dots" id="navDots">
+  <a href="#top" data-sec="top" class="active"></a>
+  <a href="#s1" data-sec="s1"></a>
+  <a href="#s2" data-sec="s2"></a>
+  <a href="#s3" data-sec="s3"></a>
+  <a href="#s4" data-sec="s4"></a>
+  <a href="#s5" data-sec="s5"></a>
+  <a href="#vi" data-sec="vi"></a>
+  <a href="#end" data-sec="end"></a>
+</nav>
+
 <!-- 封面 -->
-<header class="hero">
+<header class="hero" id="top">
   <div class="wrap">
     <div class="eyebrow">Brand Identity · Applications 2026</div>
     <h1>文藏<span class="red">徽州</span></h1>
@@ -332,18 +363,17 @@
   </div>
 </header>
 
-<!-- 朱砂红滚动条 -->
 <div class="red-bar">
   <div class="ticker">WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 · WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 ·</div>
 </div>
 
 <!-- 01 门头 -->
-<section class="block">
+<section class="block" id="s1">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">01</div>
-        <h2><span class="en">Spatial Touch</span>巷陌门头</h2>
+        <h2><span class="en">Spatial Touch</span><span class="chars">巷陌门头</span></h2>
       </div>
       <p class="desc">青砖墙身，朱砂字标。<b>标识不喧宾夺主</b>，却在暮色里一眼可辨。</p>
     </div>
@@ -354,7 +384,7 @@
 </section>
 
 <!-- 02 礼盒 -->
-<section class="block">
+<section class="block" id="s2">
   <div class="wrap">
     <div class="gift-grid">
       <div class="gift-photo reveal-l">
@@ -371,12 +401,12 @@
 </section>
 
 <!-- 03 纸品 -->
-<section class="block">
+<section class="block" id="s3">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">03</div>
-        <h2><span class="en">Collateral</span>日常纸品</h2>
+        <h2><span class="en">Collateral</span><span class="chars">日常纸品</span></h2>
       </div>
       <p class="desc">名片一红一白，火漆一枚。<b>纸的纤维、绳的拧纹、压印的凹凸</b>——品牌在最日常的随身物上被反复触摸。</p>
     </div>
@@ -394,12 +424,12 @@
 </section>
 
 <!-- 04 书 -->
-<section class="block">
+<section class="block" id="s4">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">04</div>
-        <h2><span class="en">Editorial</span>掌上千卷</h2>
+        <h2><span class="en">Editorial</span><span class="chars">掌上千卷</span></h2>
       </div>
       <p class="desc">从像素到布面精装。<b>同一枚印章，反复出现</b>——台灯暖光落在封面上，是品牌最安静的一次亮相。</p>
     </div>
@@ -417,12 +447,12 @@
 </section>
 
 <!-- 05 器物 -->
-<section class="block">
+<section class="block" id="s5">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">05</div>
-        <h2><span class="en">Vessel</span>文房器用</h2>
+        <h2><span class="en">Vessel</span><span class="chars">文房器用</span></h2>
       </div>
       <p class="desc">哑光黄铜镇纸、朱砂红漆茶罐。<b>收藏的最高形态，是品牌长在物的身上。</b></p>
     </div>
@@ -438,12 +468,12 @@
 </section>
 
 <!-- 26页手册 -->
-<section class="manual">
+<section class="manual" id="vi">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num" style="color:transparent;-webkit-text-stroke:1px var(--paper)">VI</div>
-        <h2><span class="en">Full Manual · 26 Pages</span>完整规范</h2>
+        <h2><span class="en">Full Manual · 26 Pages</span><span class="chars">完整规范</span></h2>
       </div>
       <p class="desc">从标志溯源到色彩字体，<b>26 页全册规范</b>。点击放大。</p>
     </div>
@@ -454,7 +484,7 @@
 <div class="lb" id="lb"><img src="" alt=""></div>
 
 <!-- 尾页 -->
-<section class="finale">
+<section class="finale" id="end">
   <div class="wrap">
     <div class="ring-wrap reveal">
       <img class="giant" src="assets/logo.png" alt="文藏徽州logo">
@@ -466,11 +496,45 @@
 </section>
 
 <script>
-  const io = new IntersectionObserver(es=>{
+  // 逐字拆分
+  document.querySelectorAll('.chars').forEach(el=>{
+    const txt=el.textContent;el.textContent='';
+    [...txt].forEach((c,i)=>{
+      const s=document.createElement('span');
+      s.className='char';s.textContent=c;
+      s.style.transitionDelay=(i*.08)+'s';
+      el.appendChild(s);
+    });
+  });
+
+  const io=new IntersectionObserver(es=>{
     es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
   },{threshold:.15});
   document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>io.observe(el));
 
+  // 鼠标光晕
+  const glow=document.getElementById('glow');
+  let gx=innerWidth/2,gy=innerHeight/2,cx=gx,cy=gy;
+  addEventListener('mousemove',e=>{gx=e.clientX;gy=e.clientY});
+  (function loop(){
+    cx+=(gx-cx)*.08;cy+=(gy-cy)*.08;
+    glow.style.left=cx+'px';glow.style.top=cy+'px';
+    requestAnimationFrame(loop);
+  })();
+
+  // 右侧导航点
+  const sections=['top','s1','s2','s3','s4','s5','vi','end'];
+  const dots=document.querySelectorAll('.nav-dots a');
+  window.addEventListener('scroll',()=>{
+    let cur='top';
+    sections.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el && el.getBoundingClientRect().top<innerHeight*.4) cur=id;
+    });
+    dots.forEach(d=>d.classList.toggle('active',d.dataset.sec===cur));
+  },{passive:true});
+
+  // 26页手册
   const g=document.getElementById('manualGrid');
   let html='';
   for(let i=1;i<=26;i++){
@@ -483,6 +547,7 @@
   g.innerHTML=html;
   g.querySelectorAll('.pg').forEach(el=>io.observe(el));
 
+  // lightbox
   const lb=document.getElementById('lb'),lbImg=lb.querySelector('img');
   g.addEventListener('click',e=>{
     const f=e.target.closest('.pg');if(!f)return;
