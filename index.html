@@ -265,6 +265,25 @@
     font-family:var(--sans);font-size:9px;letter-spacing:.1em;
     padding:3px 8px;
   }
+  .manual-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px;
+  }
+  .manual-grid .pg{
+    position:relative;border-radius:3px;overflow:hidden;
+    background:#f5f1e8;cursor:zoom-in;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s;
+  }
+  .manual-grid .pg:hover{
+    transform:translateY(-8px) rotate(-1deg);
+    box-shadow:0 20px 40px -10px rgba(184,50,30,.4);
+  }
+  .manual-grid .pg img{width:100%;display:block}
+  .manual-grid .pg .pn{
+    position:absolute;left:0;top:0;
+    background:var(--cinnabar);color:var(--paper);
+    font-family:var(--sans);font-size:10px;letter-spacing:.2em;
+    padding:4px 10px;
+  }
 
   /* 墨晕 */
   .ink-blot{
@@ -576,6 +595,7 @@
       <span class="pn" id="dockPn">P01</span>
     </div>
     <div class="dock" id="manualDock"></div>
+    <div class="manual-grid" id="manualGrid"></div>
   </div>
 </section>
 
@@ -725,13 +745,19 @@
     });
   }
 
-  // 墨晕
-  document.addEventListener('mousedown',e=>{
-    if(e.target.closest('.lb')||e.target.closest('input'))return;
+  // 墨晕：鼠标移动时偶尔自动出现
+  let lastBlot=0;
+  document.addEventListener('mousemove',e=>{
+    if(e.target.closest('.lb')||e.target.closest('.book-photo'))return;
+    const now=Date.now();
+    if(now-lastBlot<800)return;
+    if(Math.random()>.03)return;
+    lastBlot=now;
     const b=document.createElement('div');
     b.className='ink-blot';
     b.style.left=e.clientX+'px';
     b.style.top=e.clientY+'px';
+    b.style.transform='translate(-50%,-50%) scale(0)';
     document.body.appendChild(b);
     requestAnimationFrame(()=>b.classList.add('go'));
     setTimeout(()=>b.remove(),1600);
@@ -809,11 +835,42 @@
     dockPn.textContent='P '+String(i+1).padStart(2,'0');
   }
   dockItems.forEach(el=>{
-    el.addEventListener('mouseenter',()=>setPreview(+el.dataset.idx));
+    el.addEventListener('mouseenter',()=>{
+      const idx=+el.dataset.idx;
+      setPreview(idx);
+      // 涟漪：相邻图也放大
+      dockItems.forEach((p,j)=>{
+        const dist=Math.abs(j-idx);
+        const h=dist===0?160:dist===1?120:dist===2?90:80;
+        p.style.height=h+'px';
+        p.style.opacity=dist<=2?1:.6;
+      });
+    });
     el.addEventListener('click',()=>{
       show(+el.dataset.idx);
       lb.classList.add('on');
     });
+  });
+  dock.addEventListener('mouseleave',()=>{
+    dockItems.forEach(p=>{p.style.height='80px';p.style.opacity='.6'});
+  });
+
+  // 网格总览
+  const g=document.getElementById('manualGrid');
+  let gh='';
+  for(let i=1;i<=32;i++){
+    const n=String(i).padStart(2,'0');
+    gh+=`<figure class="pg reveal" data-idx="${i-1}">
+      <img src="assets/pages/page-${n}.png" alt="P${n}">
+      <span class="pn">P${n}</span>
+    </figure>`;
+  }
+  g.innerHTML=gh;
+  g.querySelectorAll('.pg').forEach(el=>io.observe(el));
+  g.addEventListener('click',e=>{
+    const f=e.target.closest('.pg');if(!f)return;
+    show(+f.dataset.idx);
+    lb.classList.add('on');
   });
 
   // lightbox
