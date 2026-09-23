@@ -922,8 +922,13 @@
   dock.addEventListener('mouseleave',()=>{
     dockItems.forEach(p=>{p.style.height='80px';p.style.opacity='.6'});
   });
-  setPreview(0);
-  dock.scrollLeft=0;
+  // 滚轮横向滚动
+  dock.addEventListener('wheel',e=>{
+    e.preventDefault();
+    dock.scrollLeft += e.deltaY;
+  },{passive:false});
+  // 默认第一页（延迟执行确保渲染完成）
+  setTimeout(()=>{setPreview(0);dock.scrollLeft=0;},100);
   const g=document.getElementById('manualGrid');
   let gh='';
   for(let i=1;i<=32;i++){
