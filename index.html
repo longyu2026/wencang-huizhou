@@ -766,11 +766,7 @@
   const eaveLen=eavePath.getTotalLength();
   eavePath.style.strokeDasharray=eaveLen;
   eavePath.style.strokeDashoffset=eaveLen;
-  window.addEventListener('scroll',()=>{
-    const h=document.documentElement;
-    const pct=h.scrollTop/(h.scrollHeight-h.clientHeight);
-    eavePath.style.strokeDashoffset=eaveLen*(1-pct);
-  },{passive:true});
+
 
   // 逐字
   document.querySelectorAll('.chars').forEach(el=>{
@@ -802,15 +798,25 @@
   const sections=['top','s1','s2','s3','s4','s5','vi','end'];
   const dots=document.querySelectorAll('.nav-dots a');
   const progress=document.getElementById('progress');
+  let scrollTicking=false;
   window.addEventListener('scroll',()=>{
-    const h=document.documentElement;
-    progress.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%';
-    let cur='top';
-    sections.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el && el.getBoundingClientRect().top<innerHeight*.4) cur=id;
-    });
-    dots.forEach(d=>d.classList.toggle('active',d.dataset.sec===cur));
+    if(!scrollTicking){
+      requestAnimationFrame(()=>{
+        const h=document.documentElement;
+        const pct=h.scrollTop/(h.scrollHeight-h.clientHeight);
+        progress.style.width=pct*100+'%';
+        eavePath.style.strokeDashoffset=eaveLen*(1-pct);
+        particleRunning = h.scrollTop < innerHeight*0.8;
+        let cur='top';
+        sections.forEach(id=>{
+          const el=document.getElementById(id);
+          if(el && el.getBoundingClientRect().top<innerHeight*.4) cur=id;
+        });
+        dots.forEach(d=>d.classList.toggle('active',d.dataset.sec===cur));
+        scrollTicking=false;
+      });
+      scrollTicking=true;
+    }
   },{passive:true});
 
   // 粒子"藏"字
@@ -831,7 +837,7 @@
     oc.fillText('藏',W*.72,H*.5);
     const d=oc.getImageData(0,0,W,H).data;
     particles=[];
-    const gap=Math.max(4,Math.floor(W/200));
+    const gap=Math.max(8,Math.floor(W/120));
     for(let y=0;y<H;y+=gap){
       for(let x=0;x<W;x+=gap){
         if(d[(y*W+x)*4]>128){
@@ -845,7 +851,9 @@
       }
     }
   }
+  let particleRunning=true;
   function drawP(){
+    if(!particleRunning){requestAnimationFrame(drawP);return;}
     ctx.clearRect(0,0,W,H);
     particles.forEach(p=>{
       const dx=p.x-mx,dy=p.y-my;
