@@ -394,8 +394,8 @@
   .reveal-r.in{opacity:1;transform:translateX(0)}
 
   /* ===== 印章光标 ===== */
-  *{cursor:none}
-  .seal-cursor{
+  *{cursor:auto}
+  .seal-cursor{display:none;
     position:fixed;width:36px;height:36px;z-index:9998;
     pointer-events:none;transform:translate(-50%,-50%);
     background:url('assets/logo.png') center/contain no-repeat;
@@ -686,15 +686,14 @@
         <div class="sec-num">05</div>
         <h2 class="carve-title"><span class="en">Vessel</span><span class="chars">文房器用</span></h2>
       </div>
-      <p class="desc">哑光黄铜镇纸、朱砂红漆茶罐。<b>收藏的最高形态，是品牌长在物的身上。</b></p>
     </div>
     <div class="vessel-grid">
       <div class="vessel-1 reveal-l">
-      <div class="vessel-1 reveal-l">
         <figure class="drag-rotate"><span class="ring"></span><img src="assets/seal.jpg" alt="镇纸"></figure>
-      <div class="vessel-2 reveal-r">
+      </div>
       <div class="vessel-2 reveal-r">
         <figure class="drag-rotate"><span class="ring"></span><img src="assets/tea.jpg" alt="茶罐"></figure>
+      </div>
     </div>
   </div>
 </section>
@@ -746,11 +745,7 @@
   const sealCursor=document.getElementById('sealCursor');
   let scx=innerWidth/2,scy=innerHeight/2,scxT=scx,scyT=scy;
   addEventListener('mousemove',e=>{scxT=e.clientX;scyT=e.clientY});
-  (function cursorLoop(){
-    scx+=(scxT-scx)*.35;scy+=(scyT-scy)*.35;
-    sealCursor.style.left=scx+'px';sealCursor.style.top=scy+'px';
-    requestAnimationFrame(cursorLoop);
-  })();
+  (function cursorLoop(){return;})();
   addEventListener('mousedown',e=>{
     sealCursor.classList.add('stamp');
     const mark=document.createElement('div');
