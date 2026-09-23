@@ -205,25 +205,18 @@
     background:var(--cinnabar);
   }
   .book-photo{
-    transform-style:preserve-3d;
-    transition:transform .3s ease-out;
-    cursor:grab;
+    transform:perspective(1400px) rotateY(14deg);
+    transition:transform 1s cubic-bezier(.2,.8,.2,1);
   }
-  .book-photo:active{cursor:grabbing}
+  .book-photo:hover{transform:perspective(1400px) rotateY(0)}
   .book-photo img{width:100%;display:block;border-radius:3px;box-shadow:-30px 30px 60px rgba(0,0,0,.7)}
 
   .vessel-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:start}
   .vessel-1{grid-column:span 7}
   .vessel-2{grid-column:span 5;margin-top:120px}
-  .vessel-grid figure{
-    overflow:hidden;border-radius:3px;position:relative;
-    cursor:grab;transition:transform .3s;
-  }
-  .vessel-grid figure:active{cursor:grabbing}
-  .vessel-grid figure img{
-    width:100%;display:block;
-    transition:transform .1s;
-  }
+  .vessel-grid figure{overflow:hidden;border-radius:3px;position:relative}
+  .vessel-grid img{width:100%;display:block;transition:transform 1.4s ease}
+  .vessel-grid figure:hover img{transform:scale(1.06)}
   .vessel-grid .ring{
     position:absolute;width:140px;height:140px;
     border:1px solid var(--cinnabar);border-radius:50%;opacity:.5;
@@ -272,25 +265,6 @@
     font-family:var(--sans);font-size:9px;letter-spacing:.1em;
     padding:3px 8px;
   }
-  .manual-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px;
-  }
-  .manual-grid .pg{
-    position:relative;border-radius:3px;overflow:hidden;
-    background:#f5f1e8;cursor:zoom-in;
-    transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s;
-  }
-  .manual-grid .pg:hover{
-    transform:translateY(-8px) rotate(-1deg);
-    box-shadow:0 20px 40px -10px rgba(184,50,30,.4);
-  }
-  .manual-grid .pg img{width:100%;display:block}
-  .manual-grid .pg .pn{
-    position:absolute;left:0;top:0;
-    background:var(--cinnabar);color:var(--paper);
-    font-family:var(--sans);font-size:10px;letter-spacing:.2em;
-    padding:4px 10px;
-  }
   .expand-btn{
     display:block;margin:30px auto 0;
     background:transparent;border:1px solid var(--cinnabar);
@@ -302,175 +276,24 @@
   .expand-btn:hover{
     background:var(--cinnabar);color:var(--paper);
   }
-
-  /* 墨晕 */
-  .ink-blot{
-    position:fixed;width:200px;height:200px;border-radius:50%;
-    background:radial-gradient(circle,rgba(184,50,30,.4) 0%,transparent 70%);
-    pointer-events:none;z-index:50;
-    transform:translate(-50%,-50%) scale(0);
+  .manual-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:60px;
   }
-  .ink-blot.go{animation:blotOut 1.5s ease-out forwards}
-  @keyframes blotOut{
-    0%{transform:translate(-50%,-50%) scale(0);opacity:1}
-    100%{transform:translate(-50%,-50%) scale(3);opacity:0}
+  .manual-grid .pg{
+    position:relative;border-radius:3px;overflow:hidden;
+    background:#f5f1e8;cursor:zoom-in;
+    transition:transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s;
   }
-
-  /* 滚动速度变红overlay */
-  .speed-veil{
-    position:fixed;inset:0;background:var(--cinnabar);
-    pointer-events:none;z-index:0;opacity:0;
-    transition:opacity .3s;
+  .manual-grid .pg:hover{
+    transform:translateY(-10px) rotate(-1deg);
+    box-shadow:0 30px 60px -10px rgba(184,50,30,.4);
   }
-
-  /* 器物标注 */
-  .vessel-label{
-    position:absolute;right:-10px;top:20px;
+  .manual-grid .pg img{width:100%;display:block}
+  .manual-grid .pg .pn{
+    position:absolute;left:0;top:0;
+    background:var(--cinnabar);color:var(--paper);
     font-family:var(--sans);font-size:10px;letter-spacing:.2em;
-    color:var(--cinnabar-bright);opacity:0;transition:opacity .4s;
-    display:flex;align-items:center;gap:8px;
-  }
-  .vessel-label::before{
-    content:"";width:40px;height:1px;background:var(--cinnabar);
-  }
-  .vessel-grid figure:hover .vessel-label{opacity:1}
-
-  /* Loading 印章下落 */
-  .loader{
-    position:fixed;inset:0;background:#000;z-index:9999;
-    display:flex;align-items:center;justify-content:center;
-    transition:opacity .8s;
-  }
-  .loader.done{opacity:0;pointer-events:none}
-  .loader .seal{
-    width:180px;height:180px;
-    background:url('assets/logo.png') center/contain no-repeat;
-    transform:translateY(-400px) scale(1.5);
-    animation:sealDrop 1.2s cubic-bezier(.5,0,.9,.4) .2s forwards;
-    filter:drop-shadow(0 0 40px rgba(184,50,30,.5));
-  }
-  @keyframes sealDrop{
-    0%{transform:translateY(-400px) scale(1.5)}
-    70%{transform:translateY(0) scale(1)}
-    80%{transform:translateY(-20px) scale(.98)}
-    100%{transform:translateY(0) scale(1)}
-  }
-  .loader .shock{
-    position:fixed;inset:0;background:var(--cinnabar);
-    opacity:0;pointer-events:none;
-  }
-  .loader .shock.go{animation:shockFlash .3s .8s}
-  @keyframes shockFlash{
-    0%{opacity:.3}100%{opacity:0}
-  }
-  .loader .shake{
-    position:fixed;inset:0;pointer-events:none;
-  }
-  .loader .shake.go{animation:screenShake .4s .8s}
-  @keyframes screenShake{
-    0%,100%{transform:translate(0,0)}
-    20%{transform:translate(-8px,4px)}
-    40%{transform:translate(6px,-6px)}
-    60%{transform:translate(-4px,3px)}
-    80%{transform:translate(3px,-2px)}
-  }
-  .loader .dust{
-    position:absolute;width:4px;height:4px;border-radius:50%;
-    background:var(--cinnabar-bright);opacity:0;
-  }
-  .loader .dust.go{animation:dustFly 1s .8s forwards}
-  @keyframes dustFly{
-    0%{opacity:1;transform:translate(0,0) scale(1)}
-    100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}
-  }
-
-  /* Hero 雾气层 */
-  .hero .mist{
-    position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:
-      radial-gradient(ellipse at 20% 60%,rgba(242,234,216,.04) 0%,transparent 50%),
-      radial-gradient(ellipse at 80% 30%,rgba(184,50,30,.05) 0%,transparent 50%);
-    animation:mistDrift 20s ease-in-out infinite alternate;
-  }
-  @keyframes mistDrift{
-    0%{transform:translateX(0)}
-    100%{transform:translateX(30px)}
-  }
-
-  /* Hero 呼吸点阵 */
-  .hero .dots{
-    position:absolute;inset:0;z-index:1;pointer-events:none;
-    background-image:radial-gradient(circle,rgba(184,50,30,.15) 1px,transparent 1px);
-    background-size:40px 40px;
-    animation:dotsBreath 4s ease-in-out infinite;
-  }
-  @keyframes dotsBreath{
-    0%,100%{opacity:.3}
-    50%{opacity:.7}
-  }
-
-  /* Hero logo 高光 */
-  .hero-seal{
-    position:absolute;left:50%;top:50%;
-    transform:translate(-50%,-50%);
-    width:300px;height:300px;z-index:2;
-    pointer-events:none;
-  }
-  .hero-seal img{
-    width:100%;height:100%;object-fit:contain;
-    mix-blend-mode:screen;
-    mask-image:url('assets/logo.png');
-    -webkit-mask-image:url('assets/logo.png');
-    mask-size:contain;
-    -webkit-mask-size:contain;
-    mask-repeat:no-repeat;
-    mask-position:center;
-    -webkit-mask-position:center;
-  }
-  .hero-seal .shine{
-    position:absolute;inset:0;
-    background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,200,150,.3) 0%,transparent 40%);
-    mix-blend-mode:overlay;
-  }
-
-  /* 章节压印转场 */
-  .seal-flash{
-    position:fixed;left:50%;top:50%;
-    width:200px;height:200px;
-    transform:translate(-50%,-50%) scale(0);
-    z-index:150;pointer-events:none;opacity:0;
-  }
-  .seal-flash.go{
-    animation:sealFlash 1.4s cubic-bezier(.2,.8,.2,1) forwards;
-  }
-  @keyframes sealFlash{
-    0%{opacity:.9;transform:translate(-50%,-50%) scale(.3);filter:blur(0)}
-    40%{opacity:.7;transform:translate(-50%,-50%) scale(1)}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(3);filter:blur(20px)}
-  }
-  .seal-flash::before{
-    content:"";position:absolute;inset:0;
-    background:url('assets/logo.png') center/contain no-repeat;
-    filter:drop-shadow(0 0 30px rgba(184,50,30,.6));
-  }
-
-  /* 金句屏 */
-  .quote{
-    min-height:100vh;display:flex;align-items:center;justify-content:center;
-    position:relative;overflow:hidden;
-    background:var(--ink);
-  }
-  .quote h2{
-    font-size:clamp(40px,7vw,110px);font-weight:900;line-height:1.3;
-    text-align:center;max-width:1000px;
-  }
-  .quote h2 em{
-    font-style:normal;color:var(--cinnabar-bright);
-  }
-  .quote .en{
-    position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
-    font-family:var(--sans);font-size:11px;letter-spacing:.4em;
-    color:var(--paper-dim);
+    padding:6px 12px;
   }
 
   .lb{
@@ -566,7 +389,160 @@
   .reveal-r{opacity:0;transform:translateX(60px);transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
   .reveal-r.in{opacity:1;transform:translateX(0)}
 
+  /* ===== 印章光标 ===== */
+  *{cursor:none}
+  .seal-cursor{
+    position:fixed;width:36px;height:36px;z-index:9998;
+    pointer-events:none;transform:translate(-50%,-50%);
+    background:url('assets/logo.png') center/contain no-repeat;
+    opacity:.7;transition:transform .15s,opacity .15s;
+    mix-blend-mode:screen;
+  }
+  .seal-cursor.stamp{
+    transform:translate(-50%,-50%) scale(1.5) rotate(-8deg);
+    opacity:1;
+  }
+  .seal-mark{
+    position:fixed;width:50px;height:50px;z-index:9997;
+    pointer-events:none;transform:translate(-50%,-50%);
+    background:url('assets/logo.png') center/contain no-repeat;
+    opacity:.35;animation:markFade 3s ease forwards;
+  }
+  @keyframes markFade{
+    0%{opacity:.5;transform:translate(-50%,-50%) scale(.8) rotate(-5deg)}
+    20%{opacity:.35;transform:translate(-50%,-50%) scale(1) rotate(0)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(1.1) rotate(0)}
+  }
+
+  /* ===== 屋檐轮廓线 ===== */
+  .eave-line{
+    position:fixed;top:0;left:0;width:100%;height:60px;z-index:199;
+    pointer-events:none;
+  }
+  .eave-line svg{width:100%;height:100%}
+  .eave-line path{
+    fill:none;stroke:var(--cinnabar);stroke-width:1.5;
+    stroke-dasharray:2000;stroke-dashoffset:2000;
+  }
+
+  /* ===== 金石雕刻标题 ===== */
+  .carve-title{
+    text-shadow:
+      1px 1px 0 rgba(0,0,0,.8),
+      -1px -1px 0 rgba(242,234,216,.05),
+      2px 2px 4px rgba(0,0,0,.5);
+  }
+
+  /* ===== 章节材质背景 ===== */
+  .mat-brick{
+    background-color:#0d0b09;
+    background-image:
+      linear-gradient(90deg,rgba(242,234,216,.02) 1px,transparent 1px),
+      linear-gradient(rgba(242,234,216,.02) 1px,transparent 1px);
+    background-size:60px 30px;
+  }
+  .mat-cloth{
+    background-color:#1a0d0a;
+    background-image:repeating-linear-gradient(45deg,rgba(184,50,30,.03) 0,rgba(184,50,30,.03) 1px,transparent 1px,transparent 4px);
+  }
+  .mat-paper{
+    background-color:#0f0d0a;
+    background-image:
+      radial-gradient(circle at 20% 30%,rgba(242,234,216,.02) 0%,transparent 50%),
+      radial-gradient(circle at 80% 70%,rgba(184,50,30,.02) 0%,transparent 50%);
+  }
+  .mat-linen{
+    background-color:#100e0c;
+    background-image:
+      linear-gradient(0deg,rgba(242,234,216,.015) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(242,234,216,.015) 1px,transparent 1px);
+    background-size:4px 4px;
+  }
+  .mat-brass{
+    background-color:#0e0c08;
+    background-image:
+      linear-gradient(135deg,rgba(184,149,106,.03) 0%,transparent 50%),
+      linear-gradient(315deg,rgba(184,149,106,.02) 0%,transparent 50%);
+  }
+
+  /* ===== 卷轴规范手册 ===== */
+  .scroll-manual{
+    position:relative;overflow-x:auto;overflow-y:hidden;
+    padding:60px 0;
+    scrollbar-width:thin;
+    scrollbar-color:var(--cinnabar) var(--ink-2);
+  }
+  .scroll-manual::-webkit-scrollbar{height:8px}
+  .scroll-manual::-webkit-scrollbar-track{background:var(--ink-2)}
+  .scroll-manual::-webkit-scrollbar-thumb{background:var(--cinnabar);border-radius:4px}
+  .scroll-track{
+    display:flex;gap:0;align-items:stretch;
+    padding:0 80px;min-width:max-content;
+  }
+  .scroll-page{
+    flex-shrink:0;width:320px;height:450px;
+    background:#f5f1e8;position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+    transition:transform .4s;
+  }
+  .scroll-page:hover{transform:translateY(-10px) scale(1.02)}
+  .scroll-page img{width:100%;height:100%;object-fit:cover;display:block}
+  .scroll-page .pn{
+    position:absolute;left:0;top:0;
+    background:var(--cinnabar);color:var(--paper);
+    font-family:var(--sans);font-size:10px;letter-spacing:.2em;padding:6px 12px;
+  }
+  .scroll-rod{
+    flex-shrink:0;width:24px;height:470px;
+    background:linear-gradient(90deg,#3a2a1a,#6b4a2a,#3a2a1a);
+    border-radius:4px;
+    box-shadow:inset 0 0 10px rgba(0,0,0,.5);
+  }
+  .scroll-hint{
+    text-align:center;font-family:var(--sans);font-size:11px;
+    letter-spacing:.3em;color:var(--paper-dim);margin-top:20px;
+  }
+
+  /* ===== 尾页盖印墙 ===== */
+  .stamp-wall{
+    margin-top:60px;display:flex;flex-wrap:wrap;gap:12px;
+    justify-content:center;max-width:800px;margin-left:auto;margin-right:auto;
+    min-height:100px;
+  }
+  .stamp-wall .user-stamp{
+    width:60px;height:60px;
+    background:url('assets/logo.png') center/contain no-repeat;
+    opacity:.4;animation:stampIn .5s ease both;
+    position:relative;
+  }
+  .stamp-wall .user-stamp .name{
+    position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+    font-family:var(--sans);font-size:9px;color:var(--paper-dim);
+    white-space:nowrap;
+  }
+  @keyframes stampIn{
+    0%{opacity:0;transform:scale(2) rotate(10deg)}
+    100%{opacity:.4;transform:scale(1) rotate(0)}
+  }
+  .stamp-input{
+    margin-top:40px;display:flex;gap:12px;justify-content:center;
+  }
+  .stamp-input input{
+    background:rgba(242,234,216,.06);border:1px solid var(--line);
+    color:var(--paper);padding:12px 20px;font-family:var(--serif);
+    font-size:14px;width:200px;outline:none;cursor:text;
+  }
+  .stamp-input input:focus{border-color:var(--cinnabar)}
+  .stamp-input button{
+    background:var(--cinnabar);color:var(--paper);border:none;
+    padding:12px 28px;font-family:var(--sans);font-size:12px;
+    letter-spacing:.2em;cursor:pointer;transition:background .3s;
+  }
+  .stamp-input button:hover{background:var(--cinnabar-bright)}
+
   @media(max-width:900px){
+    *{cursor:auto}
+    .seal-cursor,.seal-mark{display:none}
     .wrap{padding:0 24px}
     .gift-grid,.paper-pair,.book-stage,.vessel-grid{grid-template-columns:1fr}
     .vessel-1,.vessel-2{grid-column:span 12;margin-top:0}
@@ -584,17 +560,15 @@
 </head>
 <body>
 
-<div class="loader" id="loader">
-  <div class="shake" id="shake"></div>
-  <div class="seal" id="loadSeal"></div>
-  <div class="shock"></div>
-  <div id="dustContainer"></div>
+<div class="seal-cursor" id="sealCursor"></div>
+<div class="eave-line">
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+    <path id="eavePath" d="M0,50 L100,50 L120,30 L140,50 L200,50 L220,20 L240,50 L300,50 L320,35 L340,50 L400,50 L420,15 L440,50 L500,50 L520,30 L540,50 L600,50 L620,25 L640,50 L700,50 L720,35 L740,50 L800,50 L820,20 L840,50 L900,50 L920,30 L940,50 L1000,50 L1020,15 L1040,50 L1100,50 L1120,35 L1140,50 L1200,50"/>
+  </svg>
 </div>
-<div class="seal-flash" id="sealFlash"></div>
 
 <div class="progress" id="progress"></div>
 <div class="cursor-glow" id="glow"></div>
-<div class="speed-veil" id="speedVeil"></div>
 
 <nav class="nav-dots">
   <a href="#top" data-sec="top" class="active"></a>
@@ -608,8 +582,6 @@
 </nav>
 
 <header class="hero" id="top">
-  <div class="mist"></div>
-  <div class="dots"></div>
   <canvas id="particleCanvas"></canvas>
   <div class="wrap">
     <div class="eyebrow">Brand Identity · Applications 2026</div>
@@ -624,21 +596,16 @@
   </div>
 </header>
 
-<section class="quote">
-  <h2 class="reveal">徽州不是被记住的，<br>是<em>被藏起来的</em>。</h2>
-  <div class="en">HUIZHOU IS NOT REMEMBERED — IT IS HIDDEN.</div>
-</section>
-
 <div class="red-bar">
   <div class="ticker">WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 · WEN CANG HUI ZHOU · 文藏徽州 · 一印一世界 · 徽地万物 宝藏新生 ·</div>
 </div>
 
-<section class="block" id="s1" style="background:#0a0806">
+<section class="block mat-brick" id="s1">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">01</div>
-        <h2><span class="en">Spatial Touch</span><span class="chars">巷陌门头</span></h2>
+        <h2 class="carve-title"><span class="en">Spatial Touch</span><span class="chars">巷陌门头</span></h2>
       </div>
       <p class="desc">青砖墙身，朱砂字标。<b>标识不喧宾夺主</b>，却在暮色里一眼可辨。</p>
     </div>
@@ -648,7 +615,7 @@
   </div>
 </section>
 
-<section class="block" id="s2" style="background:#0e0a08">
+<section class="block mat-cloth" id="s2">
   <div class="wrap">
     <div class="gift-grid">
       <div class="gift-photo reveal-l">
@@ -664,12 +631,12 @@
   </div>
 </section>
 
-<section class="block" id="s3" style="background:#120c09">
+<section class="block mat-paper" id="s3">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">03</div>
-        <h2><span class="en">Collateral</span><span class="chars">日常纸品</span></h2>
+        <h2 class="carve-title"><span class="en">Collateral</span><span class="chars">日常纸品</span></h2>
       </div>
       <p class="desc">名片一红一白，火漆一枚。<b>纸的纤维、绳的拧纹、压印的凹凸</b>——品牌在最日常的随身物上被反复触摸。</p>
     </div>
@@ -686,12 +653,12 @@
   </div>
 </section>
 
-<section class="block" id="s4" style="background:#160e0a">
+<section class="block mat-linen" id="s4">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">04</div>
-        <h2><span class="en">Editorial</span><span class="chars">掌上千卷</span></h2>
+        <h2 class="carve-title"><span class="en">Editorial</span><span class="chars">掌上千卷</span></h2>
       </div>
       <p class="desc">从像素到布面精装。<b>同一枚印章，反复出现</b>——台灯暖光落在封面上，是品牌最安静的一次亮相。</p>
     </div>
@@ -708,21 +675,21 @@
   </div>
 </section>
 
-<section class="block" id="s5" style="background:#1a100b">
+<section class="block mat-brass" id="s5">
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
         <div class="sec-num">05</div>
-        <h2><span class="en">Vessel</span><span class="chars">文房器用</span></h2>
+        <h2 class="carve-title"><span class="en">Vessel</span><span class="chars">文房器用</span></h2>
       </div>
       <p class="desc">哑光黄铜镇纸、朱砂红漆茶罐。<b>收藏的最高形态，是品牌长在物的身上。</b></p>
     </div>
     <div class="vessel-grid">
       <div class="vessel-1 reveal-l">
-        <figure><span class="ring"></span><img src="assets/seal.jpg" alt="镇纸"><span class="vessel-label">BRASS · MATTE</span></figure>
+        <figure><span class="ring"></span><img src="assets/seal.jpg" alt="镇纸"></figure>
       </div>
       <div class="vessel-2 reveal-r">
-        <figure><span class="ring"></span><img src="assets/tea.jpg" alt="茶罐"><span class="vessel-label">CINNABAR LACQUER</span></figure>
+        <figure><span class="ring"></span><img src="assets/tea.jpg" alt="茶罐"></figure>
       </div>
     </div>
   </div>
@@ -733,7 +700,7 @@
     <div class="sec-head reveal">
       <div>
         <div class="sec-num" style="color:transparent;-webkit-text-stroke:1px var(--paper)">VI</div>
-        <h2><span class="en">Full Manual · 32 Pages</span><span class="chars">完整规范</span></h2>
+        <h2 class="carve-title"><span class="en">Full Manual · 32 Pages</span><span class="chars">完整规范</span></h2>
       </div>
       <p class="desc">从标志溯源到色彩字体，<b>32 页全册规范</b>。点击放大。</p>
     </div>
@@ -762,76 +729,44 @@
   </div>
   <h2>一印一世界</h2>
   <div class="en">FROM SEAL TO VESSEL · WEN CANG HUI ZHOU</div>
+  <div class="stamp-wall" id="stampWall"></div>
+  <div class="stamp-input">
+    <input type="text" id="stampName" placeholder="输入你的名字" maxlength="6">
+    <button id="stampBtn">盖印</button>
+  </div>
   <div class="foot">文藏徽州 · BRAND APPLICATIONS · 2026</div>
 </section>
 
 <script>
-  // Loading 结束
-  const loader=document.getElementById('loader');
-  const dustC=document.getElementById('dustContainer');
-  // 生成朱砂粉尘
-  for(let i=0;i<40;i++){
-    const d=document.createElement('div');
-    d.className='dust';
-    const angle=Math.random()*Math.PI*2;
-    const dist=80+Math.random()*200;
-    d.style.setProperty('--dx',Math.cos(angle)*dist+'px');
-    d.style.setProperty('--dy',Math.sin(angle)*dist+'px');
-    d.style.left='50%';d.style.top='50%';
-    d.style.width=d.style.height=(Math.random()*4+2)+'px';
-    dustC.appendChild(d);
-    setTimeout(()=>d.classList.add('go'),Math.random()*200);
-  }
-  setTimeout(()=>{
-    document.getElementById('shake').classList.add('go');
-    document.querySelector('.shock').classList.add('go');
-  },800);
-  setTimeout(()=>{
-    loader.classList.add('done');
-    setTimeout(()=>loader.remove(),1000);
-  },2200);
-
-  // Hero 高光追踪
-  document.querySelector('.hero').addEventListener('mousemove',e=>{
-    const r=document.querySelector('.hero').getBoundingClientRect();
-    const x=((e.clientX-r.left)/r.width*100).toFixed(1);
-    const y=((e.clientY-r.top)/r.height*100).toFixed(1);
-    document.documentElement.style.setProperty('--mx',x+'%');
-    document.documentElement.style.setProperty('--my',y+'%');
+  // ===== 印章光标 =====
+  const sealCursor=document.getElementById('sealCursor');
+  let scx=innerWidth/2,scy=innerHeight/2,scxT=scx,scyT=scy;
+  addEventListener('mousemove',e=>{scxT=e.clientX;scyT=e.clientY});
+  (function cursorLoop(){
+    scx+=(scxT-scx)*.35;scy+=(scyT-scy)*.35;
+    sealCursor.style.left=scx+'px';sealCursor.style.top=scy+'px';
+    requestAnimationFrame(cursorLoop);
+  })();
+  addEventListener('mousedown',e=>{
+    sealCursor.classList.add('stamp');
+    const mark=document.createElement('div');
+    mark.className='seal-mark';
+    mark.style.left=e.clientX+'px';mark.style.top=e.clientY+'px';
+    document.body.appendChild(mark);
+    setTimeout(()=>mark.remove(),3000);
   });
+  addEventListener('mouseup',()=>sealCursor.classList.remove('stamp'));
 
-  // 章节压印转场
-  const flash=document.getElementById('sealFlash');
-  const sections=['top','quote','s1','s2','s3','s4','s5','vi','end'];
-  let lastSec='top';
-  new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){
-        const id=e.target.id;
-        if(id!==lastSec && (id==='s1'||id==='s2'||id==='s3'||id==='s4'||id==='s5'||id==='vi')){
-          flash.classList.remove('go');
-          void flash.offsetWidth;
-          flash.classList.add('go');
-          lastSec=id;
-        }
-      }
-    });
-  },{threshold:.4}).observe(document.querySelector('#s1'));
-  ['s2','s3','s4','s5','vi','end'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) new IntersectionObserver(es=>{
-      es.forEach(e=>{
-        if(e.isIntersecting){
-          if(id!==lastSec){
-            flash.classList.remove('go');
-            void flash.offsetWidth;
-            flash.classList.add('go');
-            lastSec=id;
-          }
-        }
-      });
-    },{threshold:.4}).observe(el);
-  });
+  // ===== 屋檐轮廓线 =====
+  const eavePath=document.getElementById('eavePath');
+  const eaveLen=eavePath.getTotalLength();
+  eavePath.style.strokeDasharray=eaveLen;
+  eavePath.style.strokeDashoffset=eaveLen;
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement;
+    const pct=h.scrollTop/(h.scrollHeight-h.clientHeight);
+    eavePath.style.strokeDashoffset=eaveLen*(1-pct);
+  },{passive:true});
 
   // 逐字
   document.querySelectorAll('.chars').forEach(el=>{
@@ -918,7 +853,7 @@
       p.vx*=.9;p.vy*=.9;
       p.vx+=(p.ox-p.x)*.05;p.vy+=(p.oy-p.y)*.05;
       p.x+=p.vx;p.y+=p.vy;
-      ctx.fillStyle='rgba(224,69,42,.9)';
+      ctx.fillStyle='rgba(184,50,30,.8)';
       ctx.beginPath();
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
       ctx.fill();
@@ -946,108 +881,6 @@
     });
   },{threshold:.3}).observe(finale);
 
-  // 器物拖拽旋转
-  document.querySelectorAll('.vessel-grid figure').forEach(fig=>{
-    let startX=0,rotY=0,dragging=false;
-    fig.addEventListener('mousedown',e=>{
-      dragging=true;startX=e.clientX;
-      fig.style.transition='none';
-    });
-    window.addEventListener('mousemove',e=>{
-      if(!dragging)return;
-      const dx=e.clientX-startX;
-      rotY+=dx*.5;
-      fig.style.transform=`perspective(1000px) rotateY(${rotY}deg)`;
-      startX=e.clientX;
-    });
-    window.addEventListener('mouseup',()=>{dragging=false});
-  });
-
-  // 书籍鼠标控制旋转
-  const book=document.querySelector('.book-photo');
-  if(book){
-    book.addEventListener('mousemove',e=>{
-      const r=book.getBoundingClientRect();
-      const x=(e.clientX-r.left)/r.width; // 0-1
-      const angle=(x-.5)*40; // -20 ~ 20 deg
-      book.style.transform=`perspective(1400px) rotateY(${angle}deg)`;
-    });
-    book.addEventListener('mouseleave',()=>{
-      book.style.transform='perspective(1400px) rotateY(0deg)';
-    });
-  }
-
-  // 墨晕：鼠标移动时偶尔自动出现
-  let lastBlot=0;
-  document.addEventListener('mousemove',e=>{
-    if(e.target.closest('.lb')||e.target.closest('.book-photo'))return;
-    const now=Date.now();
-    if(now-lastBlot<800)return;
-    if(Math.random()>.03)return;
-    lastBlot=now;
-    const b=document.createElement('div');
-    b.className='ink-blot';
-    b.style.left=e.clientX+'px';
-    b.style.top=e.clientY+'px';
-    b.style.transform='translate(-50%,-50%) scale(0)';
-    document.body.appendChild(b);
-    requestAnimationFrame(()=>b.classList.add('go'));
-    setTimeout(()=>b.remove(),1600);
-  });
-
-  // 滚动速度变红
-  const veil=document.getElementById('speedVeil');
-  let lastY=window.scrollY,lastT=Date.now();
-  window.addEventListener('scroll',()=>{
-    const now=Date.now();
-    const dy=Math.abs(window.scrollY-lastY);
-    const dt=now-lastT;
-    const v=dy/dt;
-    if(v>.8){
-      veil.style.opacity=Math.min(.12,(v-.8)*.15);
-    } else {
-      veil.style.opacity=0;
-    }
-    lastY=window.scrollY;lastT=now;
-  },{passive:true});
-
-  // 章节数字滚到变实心
-  const secNums=document.querySelectorAll('.sec-num');
-  const numIO=new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.style.color='var(--cinnabar)';
-        e.target.style.webkitTextStroke='1px var(--cinnabar)';
-      }
-    });
-  },{threshold:.5});
-  secNums.forEach(el=>numIO.observe(el));
-
-  // 点击logo炸粒子 → 改成hover触发
-  const giant=document.querySelector('.finale .giant');
-  let boomed2=false;
-  if(giant){
-    giant.parentElement.addEventListener('mouseenter',()=>{
-      if(boomed2)return;
-      boomed2=true;
-      for(let i=0;i<30;i++){
-        const p=document.createElement('div');
-        p.style.cssText=`
-          position:absolute;width:6px;height:6px;border-radius:50%;
-          background:var(--cinnabar-bright);left:50%;top:50%;
-          pointer-events:none;z-index:10;
-        `;
-        giant.parentElement.appendChild(p);
-        const angle=Math.random()*Math.PI*2;
-        const dist=100+Math.random()*150;
-        p.animate([
-          {transform:'translate(-50%,-50%) scale(1)',opacity:1},
-          {transform:`translate(calc(-50% + ${Math.cos(angle)*dist}px),calc(-50% + ${Math.sin(angle)*dist}px)) scale(0)`,opacity:0}
-        ],{duration:800+Math.random()*400,easing:'ease-out'}).onfinish=()=>p.remove();
-      }
-    });
-  }
-
   // 32页手册 dock
   const dock=document.getElementById('manualDock');
   const dockImg=document.getElementById('dockImg');
@@ -1057,10 +890,10 @@
   for(let i=1;i<=32;i++){
     const n=String(i).padStart(2,'0');
     pages.push('assets/pages/page-'+n+'.png');
-    dh+=`<figure class="pg" data-idx="${i-1}" data-n="P${n}">
+    dh+=`<div class="pg" data-idx="${i-1}">
       <img src="assets/pages/page-${n}.png" alt="P${n}">
       <span class="pn">P${n}</span>
-    </figure>`;
+    </div>`;
   }
   dock.innerHTML=dh;
   const dockItems=dock.querySelectorAll('.pg');
@@ -1081,10 +914,6 @@
         p.style.opacity=dist<=2?1:.6;
       });
     });
-    el.addEventListener('click',()=>{
-      show(+el.dataset.idx);
-      lb.classList.add('on');
-    });
   });
   dock.addEventListener('mouseleave',()=>{
     dockItems.forEach(p=>{p.style.height='80px';p.style.opacity='.6'});
@@ -1102,11 +931,6 @@
   }
   g.innerHTML=gh;
   g.querySelectorAll('.pg').forEach(el=>io.observe(el));
-  g.addEventListener('click',e=>{
-    const f=e.target.closest('.pg');if(!f)return;
-    show(+f.dataset.idx);
-    lb.classList.add('on');
-  });
 
   // 展开全部
   const expandBtn=document.getElementById('expandBtn');
@@ -1136,6 +960,11 @@
     show(+f.dataset.idx);
     lb.classList.add('on');
   });
+  dock.addEventListener('click',e=>{
+    const f=e.target.closest('.pg');if(!f)return;
+    show(+f.dataset.idx);
+    lb.classList.add('on');
+  });
   document.getElementById('lbClose').onclick=()=>lb.classList.remove('on');
   document.getElementById('lbPrev').onclick=e=>{e.stopPropagation();show(cur-1)};
   document.getElementById('lbNext').onclick=e=>{e.stopPropagation();show(cur+1)};
@@ -1145,6 +974,32 @@
     if(e.key==='ArrowLeft')show(cur-1);
     if(e.key==='ArrowRight')show(cur+1);
     if(e.key==='Escape')lb.classList.remove('on');
+  });
+
+  // ===== 尾页盖印墙 =====
+  const stampWall=document.getElementById('stampWall');
+  const stampBtn=document.getElementById('stampBtn');
+  const stampName=document.getElementById('stampName');
+  const savedStamps=JSON.parse(localStorage.getItem('wencang_stamps')||'[]');
+  savedStamps.forEach((name,i)=>{
+    setTimeout(()=>addStamp(name),i*100);
+  });
+  function addStamp(name){
+    const s=document.createElement('div');
+    s.className='user-stamp';
+    s.innerHTML=`<span class="name">${name}</span>`;
+    stampWall.appendChild(s);
+  }
+  stampBtn.addEventListener('click',()=>{
+    const name=stampName.value.trim();
+    if(!name)return;
+    addStamp(name);
+    savedStamps.push(name);
+    localStorage.setItem('wencang_stamps',JSON.stringify(savedStamps));
+    stampName.value='';
+  });
+  stampName.addEventListener('keydown',e=>{
+    if(e.key==='Enter')stampBtn.click();
   });
 </script>
 </body>
